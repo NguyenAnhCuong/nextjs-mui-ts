@@ -1,3 +1,4 @@
+import AppHeader from "@/components/header/app.header";
 import ThemeRegistry from "@/components/theme-registry/theme.registry";
 
 export default function RootLayout({
@@ -6,9 +7,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang="en">
       <body>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <AppHeader />
+          {children}</ThemeRegistry>
       </body>
     </html>
   );
