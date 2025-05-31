@@ -7,6 +7,7 @@ import { AppBar } from "@mui/material";
 import { useHasMounted } from "@/utils/customHook";
 
 const Footer = () => {
+  const callApi = false;
   const hasMounted = useHasMounted();
   if (!hasMounted) {
     return <></>; // Prevent rendering until the component has mounted
@@ -25,7 +26,12 @@ const Footer = () => {
         <AudioPlayer
           style={{ boxShadow: "unset" }}
           autoPlay={false}
-          src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
+          volume={0.2}
+          src={
+            callApi
+              ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/audio`
+              : "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+          }
           onPlay={(e) => console.log("onPlay")}
         />
         <div

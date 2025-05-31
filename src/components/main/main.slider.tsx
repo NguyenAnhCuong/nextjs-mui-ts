@@ -5,7 +5,35 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { Settings } from "react-slick";
 import { Box, Button, Divider } from "@mui/material";
-import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
+import {
+  Category,
+  ChevronLeftOutlined,
+  ChevronRightOutlined,
+} from "@mui/icons-material";
+import { title } from "process";
+
+const songs: ITrackTop[] = [
+  {
+    _id: "1",
+    title: "Song 1",
+    description: "Song 1 description",
+    imgUrl: "abc.png",
+    category: "CHILL",
+    trackUrl: "chill.mp3",
+    countlike: 100,
+    countplay: 1000,
+    uploader: {
+      _id: 1,
+      name: "IM ADMIN",
+      email: "admin@gmail.com",
+      role: "ADMIN",
+      type: "SYSTEM",
+    },
+    isDeleted: false,
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: new Date(),
+  },
+];
 
 const MainSlider = () => {
   const NextArrow = (props: any) => {
