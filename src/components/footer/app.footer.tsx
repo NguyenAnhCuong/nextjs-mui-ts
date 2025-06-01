@@ -29,7 +29,7 @@ const Footer = () => {
           volume={0.2}
           src={
             callApi
-              ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/audio`
+              ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/track/trackName.mp3`
               : "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
           }
           onPlay={(e) => console.log("onPlay")}
