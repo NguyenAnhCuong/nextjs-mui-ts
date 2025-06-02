@@ -1,5 +1,4 @@
 import MainSlider from "@/components/main/main.slider";
-import { Category } from "@mui/icons-material";
 import { Container } from "@mui/material";
 import { sendRequestJS } from "@/utils/old.api";
 import { sendRequest } from "@/utils/api";
@@ -13,7 +12,7 @@ export default async function HomePage() {
       description: "Song 1 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill1.mp3",
+      trackUrl: `${process.env.NEXT_PUBLIC_AUDIO_URL}1.mp3`,
       countlike: 100,
       countplay: 1000,
       uploader: {
@@ -33,7 +32,7 @@ export default async function HomePage() {
       description: "Song 2 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill2.mp3",
+      trackUrl: `${process.env.NEXT_PUBLIC_AUDIO_URL}2.mp3`,
       countlike: 120,
       countplay: 1232,
       uploader: {
