@@ -12,7 +12,7 @@ export default async function HomePage() {
       description: "Song 1 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: `${process.env.NEXT_PUBLIC_AUDIO_URL}1.mp3`,
+      trackUrl: `SoundHelix-Song-1.mp3`,
       countlike: 100,
       countplay: 1000,
       uploader: {
@@ -32,7 +32,7 @@ export default async function HomePage() {
       description: "Song 2 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: `${process.env.NEXT_PUBLIC_AUDIO_URL}2.mp3`,
+      trackUrl: `SoundHelix-Song-2.mp3`,
       countlike: 120,
       countplay: 1232,
       uploader: {
@@ -52,7 +52,7 @@ export default async function HomePage() {
       description: "Song 3 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill3.mp3",
+      trackUrl: "SoundHelix-Song-3.mp3",
       countlike: 76,
       countplay: 654,
       uploader: {
@@ -72,7 +72,7 @@ export default async function HomePage() {
       description: "Song 6 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill4.mp3",
+      trackUrl: "SoundHelix-Song-6.mp3",
       countlike: 99,
       countplay: 888,
       uploader: {
@@ -92,7 +92,7 @@ export default async function HomePage() {
       description: "Song 7 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill5.mp3",
+      trackUrl: "SoundHelix-Song-7.mp3",
       countlike: 70,
       countplay: 600,
       uploader: {
@@ -112,7 +112,7 @@ export default async function HomePage() {
       description: "Song 12 description",
       imgUrl: "assets/images/sou.jpg",
       category: "CHILL",
-      trackUrl: "chill5.mp3",
+      trackUrl: "SoundHelix-Song-12.mp3",
       countlike: 50,
       countplay: 753,
       uploader: {
@@ -134,7 +134,7 @@ export default async function HomePage() {
       description: "Song 4 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout1.mp3",
+      trackUrl: "SoundHelix-Song-4.mp3",
       countlike: 24,
       countplay: 423,
       uploader: {
@@ -154,7 +154,7 @@ export default async function HomePage() {
       description: "Song 5 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout2.mp3",
+      trackUrl: "SoundHelix-Song-5.mp3",
       countlike: 45,
       countplay: 765,
       uploader: {
@@ -174,7 +174,7 @@ export default async function HomePage() {
       description: "Song 8 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout3.mp3",
+      trackUrl: "SoundHelix-Song-8.mp3",
       countlike: 50,
       countplay: 530,
       uploader: {
@@ -194,7 +194,7 @@ export default async function HomePage() {
       description: "Song 9 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout4.mp3",
+      trackUrl: "SoundHelix-Song-9.mp3",
       countlike: 40,
       countplay: 600,
       uploader: {
@@ -214,7 +214,7 @@ export default async function HomePage() {
       description: "Song 10 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout5.mp3",
+      trackUrl: "SoundHelix-Song-10.mp3",
       countlike: 55,
       countplay: 820,
       uploader: {
@@ -229,12 +229,12 @@ export default async function HomePage() {
       updatedAt: new Date(),
     },
     {
-      _id: "111",
-      title: "Song 10",
-      description: "Song 10 description",
+      _id: "11",
+      title: "Song 11",
+      description: "Song 11 description",
       imgUrl: "assets/images/daoko.jpg",
       category: "WORKOUT",
-      trackUrl: "workout5.mp3",
+      trackUrl: "SoundHelix-Song-11.mp3",
       countlike: 89,
       countplay: 242,
       uploader: {
