@@ -257,7 +257,7 @@ const WaveTrack = () => {
             <div className="comments" style={{ position: "relative" }}>
               {arrComments.map((comment) => {
                 return (
-                  <Tooltip title={comment.content} arrow>
+                  <Tooltip title={comment.content} arrow key={comment.id}>
                     <img
                       onPointerMove={(e) => {
                         hoverRef.current!.style.width = calLeft(
@@ -284,7 +284,9 @@ const WaveTrack = () => {
         <div
           className="right"
           style={{ backgroundColor: "#333", width: "25%", height: "100%" }}
-        ></div>
+        >
+          {/* <img src={} alt="" /> */}
+        </div>
       </div>
     </div>
   );
