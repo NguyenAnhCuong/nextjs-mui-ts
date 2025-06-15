@@ -21,6 +21,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import { useRouter } from "next/navigation";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function AppHeader() {
   const router = useRouter();
+  const { data: session } = useSession(); //const session = data
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -113,7 +115,14 @@ export default function AppHeader() {
           Profile
         </Link>
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          signOut();
+        }}
+      >
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -206,10 +215,20 @@ export default function AppHeader() {
                 },
               }}
             >
-              <Link href={"/playlist"}>Playlist</Link>
-              <Link href={"/like"}>Likes</Link>
-              <Link href={"/upload"}>Upload</Link>
-              <Avatar onClick={handleProfileMenuOpen}>E</Avatar>
+              {session ? (
+                <>
+                  <Link href={"/playlist"}>Playlist</Link>
+                  <Link href={"/like"}>Likes</Link>
+                  <Link href={"/upload"}>Upload</Link>
+                  <Avatar onClick={handleProfileMenuOpen}>E</Avatar>
+                </>
+              ) : (
+                <>
+                  <Link href={"#"} onClick={() => signIn()}>
+                    Login
+                  </Link>
+                </>
+              )}
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton
