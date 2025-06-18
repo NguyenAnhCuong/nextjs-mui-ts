@@ -224,9 +224,7 @@ export default function AppHeader() {
                 </>
               ) : (
                 <>
-                  <Link href={"#"} onClick={() => signIn()}>
-                    Login
-                  </Link>
+                  <Link href={"auth/signin"}>Login</Link>
                 </>
               )}
             </Box>
