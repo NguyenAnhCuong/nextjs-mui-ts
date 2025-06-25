@@ -7,6 +7,9 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useCallback } from "react";
+import { sendRequest, sendRequestFile } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -21,11 +24,47 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const Step1 = () => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { data: session } = useSession();
+  const onDrop = useCallback(
+    async (acceptedFiles: FileWithPath[]) => {
+      // Do something with the files
+      if (acceptedFiles && acceptedFiles[0]) {
+        const audio = acceptedFiles[0];
+        const formData = new FormData();
+        formData.append("fileUpload", audio);
+        // const res = await sendRequestFile<IBackendRes<ITrackTop[]>>({
+        //   url: "http://localhost:8000/api/v1/files/upload",
+        //   method: "POST",
+        //   body: formData,
+        //   headers: {
+        //     "Authorization": `Bearer ${session?.access_token}`,
+        //     "target_type":"tracks"
+        //   },
+        // });
 
-  const onDrop = useCallback((acceptedFiles: FileWithPath) => {
-    // Do something with the files
-  }, []);
+        // const res = await axios.post(
+        //   "http://localhost:8000/api/v1/files/upload",
+        //   formData,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${session?.access_token}`,
+        //       target_type: "tracks",
+        //     },
+        //   }
+        // );
+
+        console.log("File upload", audio);
+      }
+    },
+    [session]
+  );
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "audio/mpeg": [".mp3"],
+    },
+  });
 
   const files = acceptedFiles.map((file: FileWithPath) => (
     <li key={file.path}>
