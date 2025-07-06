@@ -20,25 +20,47 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const res = await sendRequest<IBackendRes<JWT>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}}/api/v1/auth/login`,
-          method: "POST",
-          body: {
-            username: credentials?.username,
-            password: credentials?.password,
-          },
-        });
+        const user = {
+          id: "1",
+          username: "js mith",
+          isVerify: true,
+          type: "Crendentials",
+          role: "ADMIN",
+          email: "jsmith@example.com",
+          password: "123456",
+        };
 
-        if (res && res.data) {
+        if (
+          credentials?.username === user.username &&
+          credentials?.password === "123456"
+        ) {
           // Any object returned will be saved in `user` property of the JWT
-          return res.data as any;
+          return user;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
-          throw new Error(res?.message as string);
+          return null;
 
           // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
+        // Add logic here to look up the user from the credentials supplied
+        // const res = await sendRequest<IBackendRes<JWT>>({
+        //   url: `${process.env.NEXT_PUBLIC_BACKEND_URL}}/api/v1/auth/login`,
+        //   method: "POST",
+        //   body: {
+        //     username: credentials?.username,
+        //     password: credentials?.password,
+        //   },
+        // });
+
+        // if (res && res.data) {
+        //   // Any object returned will be saved in `user` property of the JWT
+        //   return res.data as any;
+        // } else {
+        //   // If you return null then an error will be displayed advising the user to check their details.
+        //   throw new Error(res?.message as string);
+
+        //   // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        // }
       },
     }),
     GithubProvider({
@@ -74,7 +96,7 @@ export const authOptions: AuthOptions = {
         //@ts-ignore
         token.refresh_token = user.refresh_token;
         //@ts-ignore
-        token.user = user.user;
+        token.user = user;
       }
       return token;
     },

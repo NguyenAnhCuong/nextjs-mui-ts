@@ -6,7 +6,7 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { sendRequest, sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -23,37 +23,47 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const Step1 = () => {
+interface IProps {
+  setValue: (v: number) => void;
+  setTrackUpload: any;
+  trackUpload: any;
+}
+
+const Step1 = (props: IProps) => {
   const { data: session } = useSession();
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
       // Do something with the files
       if (acceptedFiles && acceptedFiles[0]) {
+        props.setValue(1);
         const audio = acceptedFiles[0];
         const formData = new FormData();
         formData.append("fileUpload", audio);
-        // const res = await sendRequestFile<IBackendRes<ITrackTop[]>>({
-        //   url: "http://localhost:8000/api/v1/files/upload",
-        //   method: "POST",
-        //   body: formData,
-        //   headers: {
-        //     "Authorization": `Bearer ${session?.access_token}`,
-        //     "target_type":"tracks"
-        //   },
-        // });
 
-        // const res = await axios.post(
-        //   "http://localhost:8000/api/v1/files/upload",
-        //   formData,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${session?.access_token}`,
-        //       target_type: "tracks",
-        //     },
-        //   }
-        // );
-
-        console.log("File upload", audio);
+        const res = await axios.post(
+          "http://localhost:8000/api/v1/files/upload",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.access_token}`,
+              target_type: "tracks",
+            },
+            onUploadProgress: (progressEvent) => {
+              let percentCompleted = Math.floor(
+                (progressEvent.loaded * 100) / progressEvent.total!
+              );
+              props.setTrackUpload({
+                ...props.trackUpload,
+                fileName: acceptedFiles[0].name,
+                percent: percentCompleted,
+              });
+            },
+          }
+        );
+        props.setTrackUpload((prevState: any) => ({
+          ...prevState,
+          uploadedTrack: res.data.data.fileName,
+        }));
       }
     },
     [session]

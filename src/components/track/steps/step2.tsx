@@ -17,6 +17,10 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import "./upload.css";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { sendRequest } from "@/utils/api";
+import { title } from "process";
 
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number }
@@ -47,31 +51,50 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function LinearWithValueLabel() {
+function LinearWithValueLabel(props: IProps) {
   const [progress, setProgress] = React.useState(10);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 10 : prevProgress + 10
-      );
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
-      <LinearProgressWithLabel value={progress} />
+      <LinearProgressWithLabel value={props.trackUpload.percent} />
     </Box>
   );
 }
 
-function InputFileUpload() {
+function InputFileUpload(props: any) {
+  const { info, setInfo } = props;
+  const { data: session } = useSession();
+
+  const handleUplodaImage = async (image: any) => {
+    // const formData = new FormData();
+    // formData.append("fileUpload", image);
+    // const res = await axios.post(
+    //   "http://localhost:8000/api/v1/files/upload",
+    //   formData,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${session?.access_token}`,
+    //       target_type: "images",
+    //     },
+    //   }
+    // );
+    // setInfo({
+    //   ...info,
+    //   imgUrl: res.data.data.fileName,
+    // });
+
+    console.log(image);
+  };
+
   return (
     <Button
-      onClick={(e) => e.preventDefault()}
+      onClick={(e) => {
+        e.preventDefault();
+        const event = e.target as HTMLInputElement;
+        if (event.files) {
+          handleUplodaImage(event.files[0]);
+        }
+      }}
       component="label"
       variant="contained"
       startIcon={<CloudUploadIcon />}
@@ -82,27 +105,42 @@ function InputFileUpload() {
   );
 }
 
-const Step2 = () => {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+interface IProps {
+  trackUpload: {
+    fileName: string;
+    percent: number;
+    uploadedTrack: string;
   };
+}
 
-  const onDrop = React.useCallback((acceptedFiles: FileWithPath[]) => {
-    // Do something with the files
-    console.log(">>> check ondrop: ");
-  }, []);
+interface INewTrack {
+  title: string;
+  description: string;
+  trackUrl: string;
+  imgUrl: string;
+  category: string;
+}
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    onDrop,
+const Step2 = (props: IProps) => {
+  const { data: session } = useSession();
+
+  const { trackUpload } = props;
+  const [info, setInfo] = React.useState<INewTrack>({
+    title: "",
+    description: "",
+    trackUrl: "",
+    imgUrl: "",
+    category: "",
   });
 
-  const files = acceptedFiles.map((file: FileWithPath) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
+  React.useEffect(() => {
+    if (trackUpload && trackUpload.uploadedTrack) {
+      setInfo({
+        ...info,
+        trackUrl: trackUpload.uploadedTrack,
+      });
+    }
+  }, [trackUpload]);
 
   const category = [
     {
@@ -119,11 +157,34 @@ const Step2 = () => {
     },
   ];
 
+  const handleSubmitForm = async () => {
+    const res = await sendRequest<IBackendRes<ITrackTop[]>>({
+      url: "http://localhost:8000/api/v1/tracks",
+      method: "POST",
+      body: {
+        title: info.title,
+        description: info.description,
+        trackUrl: info.trackUrl,
+        imgUrl: info.imgUrl,
+        category: info.category,
+      },
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    });
+
+    if (res && res.data) {
+      alert("create success");
+    } else {
+      alert(res.message);
+    }
+  };
+
   return (
     <Box sx={{ pb: 10 }}>
       <div>
-        <div>Your uploading track:</div>
-        <LinearWithValueLabel />
+        <div>{trackUpload.fileName}</div>
+        <LinearWithValueLabel trackUpload={trackUpload} />
       </div>
 
       <Grid container spacing={2} mt={5}>
@@ -140,22 +201,42 @@ const Step2 = () => {
           }}
         >
           <div style={{ height: 250, width: 250, background: "#ccc" }}>
-            <div></div>
+            <div>
+              {/* {info.imgUrl && (
+                <img
+                  height={250}
+                  width={250}
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${info.imgUrl}`}
+                />
+              )} */}
+            </div>
           </div>
           <div>
-            <InputFileUpload />
+            <InputFileUpload info={info} setInfo={setInfo} />
           </div>
         </Grid>
         <Grid item xs={6} md={8}>
           <TextField
-            id="standard-basic"
+            value={info?.title}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                title: e.target.value,
+              })
+            }
             label="Title"
             variant="standard"
             fullWidth
             margin="dense"
           />
           <TextField
-            id="standard-basic"
+            value={info?.description}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                description: e.target.value,
+              })
+            }
             label="Description"
             variant="standard"
             fullWidth
@@ -170,7 +251,13 @@ const Step2 = () => {
             label="Category"
             fullWidth
             variant="standard"
-            //   defaultValue="EUR"
+            value={info?.category}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                category: e.target.value,
+              })
+            }
           >
             {category.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -183,6 +270,7 @@ const Step2 = () => {
             sx={{
               mt: 5,
             }}
+            onClick={() => handleSubmitForm()}
           >
             Save
           </Button>

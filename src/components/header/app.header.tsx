@@ -108,12 +108,16 @@ export default function AppHeader() {
       onClose={handleMenuClose}
     >
       <MenuItem>
-        <Link
-          href={"/profile"}
-          style={{ color: "unset", textDecoration: "none" }}
-        >
-          Profile
-        </Link>
+        {session
+          ? [
+              <Link
+                href={`/profile/${session?.user.id}`}
+                style={{ color: "unset", textDecoration: "none" }}
+              >
+                Profile
+              </Link>,
+            ]
+          : [<></>]}
       </MenuItem>
       <MenuItem
         onClick={() => {

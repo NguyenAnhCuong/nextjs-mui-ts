@@ -24,6 +24,7 @@ const Footer = () => {
     >
       <Container sx={{ display: "flex", gap: 10 }}>
         <AudioPlayer
+          layout="horizontal-reverse"
           style={{ boxShadow: "unset" }}
           autoPlay={false}
           volume={0.2}
