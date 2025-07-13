@@ -12,6 +12,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { ListItem } from "@mui/material";
 import { useTrackContext } from "@/lib/context/track.wrapper";
+import PauseIcon from "@mui/icons-material/Pause";
+import Link from "next/link";
 
 const ProfileTracks = (props: any) => {
   const { data } = props;
@@ -23,9 +25,17 @@ const ProfileTracks = (props: any) => {
     <Card sx={{ display: "flex", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto" }}>
-          <Typography component="div" variant="h5">
-            {data.title}
-          </Typography>
+          <Link
+            style={{
+              textDecoration: "none",
+              color: "unset",
+            }}
+            href={`/track/${data._id}?audio=${data.trackName}&id=${data._id}`}
+          >
+            <Typography component="div" variant="h5">
+              {data.title}
+            </Typography>
+          </Link>
           <Typography
             variant="subtitle1"
             color="text.secondary"
@@ -42,9 +52,29 @@ const ProfileTracks = (props: any) => {
               <SkipPreviousIcon />
             )}
           </IconButton>
-          <IconButton aria-label="play/pause">
-            <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-          </IconButton>
+          {(data._id !== currentTrack._id ||
+            (data._id === currentTrack._id &&
+              currentTrack.isPlaying === false)) && (
+            <IconButton
+              aria-label="play/pause"
+              onClick={() => {
+                setCurrentTrack({ ...data, isPlaying: true });
+              }}
+            >
+              <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+            </IconButton>
+          )}
+
+          {data._id === currentTrack._id && currentTrack.isPlaying === true && (
+            <IconButton
+              aria-label="play/pause"
+              onClick={() => {
+                setCurrentTrack({ ...data, isPlaying: false });
+              }}
+            >
+              <PauseIcon sx={{ height: 38, width: 38 }} />
+            </IconButton>
+          )}
           <IconButton aria-label="next">
             {theme.direction === "rtl" ? (
               <SkipPreviousIcon />
@@ -57,7 +87,7 @@ const ProfileTracks = (props: any) => {
       <CardMedia
         component="img"
         sx={{ width: 151 }}
-        image={`http://localhost:8000/images/${data.imgUrl}`}
+        image={data.imgUrl}
         alt="Live from space album cover"
       />
     </Card>
