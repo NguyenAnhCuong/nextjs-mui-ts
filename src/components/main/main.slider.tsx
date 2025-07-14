@@ -7,6 +7,7 @@ import { Settings } from "react-slick";
 import { Box, Button, Divider } from "@mui/material";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import Link from "next/link";
+import { useTrackContext } from "@/lib/context/track.wrapper";
 
 interface IProps {
   data: ITrackTop[];
@@ -15,6 +16,7 @@ interface IProps {
 
 const MainSlider = (props: IProps) => {
   const { data, title } = props;
+  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
   const callApi = false;
 
   const NextArrow = (props: any) => {
@@ -98,7 +100,8 @@ const MainSlider = (props: IProps) => {
                 }
               />
               <Link
-                href={`/track/${track._id}?audio=${track.trackUrl}`}
+                href={`/track/${track._id}?audio=${track.trackName}`}
+                onClick={() => setCurrentTrack({ ...track, isPlaying: false })}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <h4>{track.title}</h4>

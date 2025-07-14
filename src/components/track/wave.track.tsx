@@ -1,13 +1,14 @@
 "use client";
 
 import { useWavesurfer } from "@/utils/customHook";
-import { orange } from "@mui/material/colors";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WaveSurferOptions } from "wavesurfer.js";
 import "./wave.scss";
 import { PauseCircle, PlayArrow } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Divider, Tooltip } from "@mui/material";
+import { useTrackContext } from "@/lib/context/track.wrapper";
+import CommentTrack from "@/components/track/comment.track";
 
 const WaveTrack = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -18,6 +19,7 @@ const WaveTrack = () => {
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
 
   const options = useMemo((): Omit<WaveSurferOptions, "container"> => {
     let gradient, progressGradient;
@@ -135,7 +137,7 @@ const WaveTrack = () => {
     wavesurfer?.isPlaying() ? wavesurfer?.pause() : wavesurfer?.play();
   }, [wavesurfer]);
 
-  const arrComments = [
+  const arrComments: ITrackComment[] = [
     {
       id: 1,
       avatar: "/assets/images/defaultavata.png",
@@ -157,6 +159,13 @@ const WaveTrack = () => {
       content: "This is a comment 3",
       user: "user3",
     },
+    {
+      id: 4,
+      avatar: "/assets/images/defaultavata.png",
+      moment: 70,
+      content: "This is a comment 4",
+      user: "user4",
+    },
   ];
 
   const calLeft = (moment: number) => {
@@ -165,6 +174,20 @@ const WaveTrack = () => {
 
     return `${percentage}%`;
   };
+
+  const track = currentTrack;
+
+  useEffect(() => {
+    if (currentTrack.isPlaying && wavesurfer) {
+      wavesurfer.pause();
+    }
+  }, [currentTrack]);
+
+  useEffect(() => {
+    if (track?._id && !currentTrack?._id) {
+      setCurrentTrack({ ...track, isPlaying: false });
+    }
+  }, [track]);
 
   return (
     <div style={{ marginTop: "20px" }}>
@@ -203,7 +226,15 @@ const WaveTrack = () => {
                   justifyContent: "center",
                   cursor: "pointer",
                 }}
-                onClick={() => onPlayclick()}
+                onClick={() => {
+                  onPlayclick();
+                  if (wavesurfer && track) {
+                    setCurrentTrack({
+                      ...track,
+                      isPlaying: false,
+                    });
+                  }
+                }}
               >
                 {isPlaying ? (
                   <PauseCircle sx={{ fontSize: 30, color: "white" }} />
@@ -281,12 +312,31 @@ const WaveTrack = () => {
             </div>
           </div>
         </div>
-        <div
-          className="right"
-          style={{ backgroundColor: "#333", width: "25%", height: "100%" }}
-        >
-          {/* <img src={} alt="" /> */}
-        </div>
+        {track.imgUrl ? (
+          <div
+            className="right"
+            style={{
+              width: "25%",
+              alignItems: "center",
+              display: "flex",
+              padding: 15,
+            }}
+          >
+            <img src={`/${track.imgUrl}`} alt="" width={250} height={250} />
+          </div>
+        ) : (
+          <div
+            className="right"
+            style={{
+              width: "25%",
+              height: "100%",
+              background: "#ccc",
+            }}
+          ></div>
+        )}
+      </div>
+      <div>
+        <CommentTrack comments={arrComments} track={track} />
       </div>
     </div>
   );

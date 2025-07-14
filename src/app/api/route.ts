@@ -7,5 +7,5 @@ export async function GET(req: NextRequest, response: NextResponse) {
   //return await fetch("https://localhost:8000/api/songs.mp3");
   const url = new URL(req.url);
   const audioFile = new URLSearchParams(url.search).get("audio");
-  return await fetch(`${process.env.NEXT_PUBLIC_AUDIO_URL}/${audioFile}`);
+  return await fetch(`${process.env.NEXT_PUBLIC_AUDIO_URL}/${audioFile}.mp3`);
 }

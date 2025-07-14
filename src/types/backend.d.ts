@@ -2,6 +2,13 @@ export {};
 // https://bobbyhadz.com/blog/typescript-make-types-global#declare-global-types-in-typescript
 
 declare global {
+  interface ITrackComment {
+    id: number;
+    avatar: string;
+    moment: number;
+    content: string;
+    user: string;
+  }
   interface ITrackTop {
     _id: string;
     title: string;
@@ -9,6 +16,7 @@ declare global {
     imgUrl: string;
     category: string;
     trackUrl: string;
+    trackName: string;
     countlike: number;
     countplay: number;
     uploader: {
