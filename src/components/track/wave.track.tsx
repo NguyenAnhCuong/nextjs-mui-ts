@@ -10,6 +10,7 @@ import { Divider, Tooltip } from "@mui/material";
 import { useTrackContext } from "@/lib/context/track.wrapper";
 import CommentTrack from "@/components/track/comment.track";
 import { faker } from "@faker-js/faker";
+import LikeTrack from "@/components/track/like.track";
 
 const WaveTrack = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -322,6 +323,9 @@ const WaveTrack = () => {
             }}
           ></div>
         )}
+      </div>
+      <div>
+        <LikeTrack track={track} />
       </div>
       <div>
         <CommentTrack

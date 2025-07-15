@@ -137,7 +137,7 @@ const CommentTrack = (props: IComment) => {
                       </div>
                     </Box>
                     <Box sx={{ fontSize: "12px", color: "#999" }}>
-                      {dayjs(comment.createAt).fromNow()}
+                      {hasMounted && dayjs(comment.createAt).fromNow()}
                     </Box>
                   </Box>
                 );
