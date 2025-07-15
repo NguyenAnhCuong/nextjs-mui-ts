@@ -8,6 +8,7 @@ declare global {
     moment: number;
     content: string;
     user: string;
+    createAt: DateTime;
   }
   interface ITrackTop {
     _id: string;

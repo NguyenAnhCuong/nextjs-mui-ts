@@ -1,21 +1,28 @@
+"use client";
+
 import { Box, TextField, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ✅ thêm dòng này
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { faker } from "@faker-js/faker";
+import WaveSurfer from "wavesurfer.js";
+import { useHasMounted } from "@/utils/customHook";
 
 dayjs.extend(relativeTime);
 
 interface IComment {
   comments: ITrackComment[];
+  setComments: React.Dispatch<React.SetStateAction<ITrackComment[]>>;
   track: ITrackTop | null;
+  wavesurfer: WaveSurfer;
 }
 
 const CommentTrack = (props: IComment) => {
   const router = useRouter();
 
-  const { comments, track } = props;
+  const { comments, track, setComments, wavesurfer } = props;
   const [yourComment, setYourComment] = useState("");
 
   const { data: session } = useSession();
@@ -26,28 +33,52 @@ const CommentTrack = (props: IComment) => {
     const paddedSeconds = `0${secondsRemainder}`.slice(-2);
     return `${min}:${paddedSeconds}`;
   };
+  const hasMounted = useHasMounted();
 
   const handleSubmit = () => {
-    console.log(yourComment);
+    if (!yourComment.trim()) return;
+
+    const newComment: ITrackComment = {
+      id: faker.number.int(), // hoặc dùng uuid
+      avatar: "/assets/images/defaultavata.png",
+      user: session?.user?.email!,
+      content: yourComment,
+      moment: Math.floor(wavesurfer?.getCurrentTime() ?? 0), // hoặc wavesurfer.getCurrentTime()
+      createAt: Date.now(),
+    };
+
+    props.setComments((prev) => [...prev, newComment]);
+    setYourComment("");
   };
+
+  const handleJumpTrack = (moment: number) => {
+    if (wavesurfer) {
+      const duration = wavesurfer.getDuration();
+      wavesurfer.seekTo(moment / duration);
+      wavesurfer.play();
+    }
+  };
+
   return (
     <div>
       <div style={{ marginTop: "50px", marginBottom: "25px" }}>
-        {session?.user && (
-          <TextField
-            fullWidth
-            value={yourComment}
-            label="Comments"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSubmit();
-              }
-            }}
-            variant="standard"
-            onChange={(e) => setYourComment(e.target.value)}
-          />
-        )}
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box>
+          {session?.user && (
+            <TextField
+              fullWidth
+              value={yourComment}
+              label="Comments"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
+              variant="standard"
+              onChange={(e) => setYourComment(e.target.value)}
+            />
+          )}
+        </Box>
+        <Box sx={{ display: "flex", gap: "10px" }}>
           <Box
             sx={{
               width: "20%",
@@ -63,44 +94,54 @@ const CommentTrack = (props: IComment) => {
               width={150}
               style={{ borderRadius: "50%" }}
             />
-            <div>{track?.uploader?.email}</div>
+            <div>{hasMounted && track?.uploader?.email}</div>
           </Box>
           <Box sx={{ width: "80%", p: 3 }}>
-            {comments?.map((comment) => {
-              return (
-                <Box
-                  key={comment.id}
-                  sx={{
-                    display: "flex",
-                    gap: "10px",
-                    justifyContent: "space-between",
-                  }}
-                >
+            {[...comments]
+              .sort((a, b) => b.moment - a.moment)
+              .map((comment) => {
+                return (
                   <Box
+                    key={comment.id}
                     sx={{
                       display: "flex",
                       gap: "10px",
-                      alignItems: "start",
-                      marginBottom: "25px",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <img
-                      src={comment.avatar}
-                      height={40}
-                      width={40}
-                      style={{ borderRadius: "50%" }}
-                    />
-                    <div>
-                      <Typography fontSize={13}>{comment.user}</Typography>
-                      <div>{comment.content}</div>
-                    </div>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: "10px",
+                        alignItems: "start",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      <img
+                        src={comment.avatar}
+                        height={40}
+                        width={40}
+                        style={{ borderRadius: "50%" }}
+                      />
+                      <div>
+                        <Typography fontSize={13}>
+                          {comment.user} at{" "}
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleJumpTrack(comment.moment)}
+                          >
+                            {formatTime(comment.moment)}
+                          </span>
+                        </Typography>
+                        <div>{comment.content}</div>
+                      </div>
+                    </Box>
+                    <Box sx={{ fontSize: "12px", color: "#999" }}>
+                      {dayjs(comment.createAt).fromNow()}
+                    </Box>
                   </Box>
-                  <Box sx={{ fontSize: "12px", color: "#999" }}>
-                    {dayjs(comment.moment).fromNow()}
-                  </Box>
-                </Box>
-              );
-            })}
+                );
+              })}
           </Box>
         </Box>
       </div>

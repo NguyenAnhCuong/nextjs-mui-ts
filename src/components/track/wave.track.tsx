@@ -1,6 +1,6 @@
 "use client";
 
-import { useWavesurfer } from "@/utils/customHook";
+import { useHasMounted, useWavesurfer } from "@/utils/customHook";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WaveSurferOptions } from "wavesurfer.js";
@@ -9,6 +9,7 @@ import { PauseCircle, PlayArrow } from "@mui/icons-material";
 import { Divider, Tooltip } from "@mui/material";
 import { useTrackContext } from "@/lib/context/track.wrapper";
 import CommentTrack from "@/components/track/comment.track";
+import { faker } from "@faker-js/faker";
 
 const WaveTrack = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -137,36 +138,23 @@ const WaveTrack = () => {
     wavesurfer?.isPlaying() ? wavesurfer?.pause() : wavesurfer?.play();
   }, [wavesurfer]);
 
-  const arrComments: ITrackComment[] = [
-    {
-      id: 1,
-      avatar: "/assets/images/defaultavata.png",
-      moment: 10,
-      content: "This is a comment 1",
-      user: "user1",
-    },
-    {
-      id: 2,
-      avatar: "/assets/images/defaultavata.png",
-      moment: 20,
-      content: "This is a comment 2",
-      user: "user2",
-    },
-    {
-      id: 3,
-      avatar: "/assets/images/defaultavata.png",
-      moment: 30,
-      content: "This is a comment 3",
-      user: "user3",
-    },
-    {
-      id: 4,
-      avatar: "/assets/images/defaultavata.png",
-      moment: 70,
-      content: "This is a comment 4",
-      user: "user4",
-    },
-  ];
+  const [comments, setComments] = useState<ITrackComment[]>([]);
+  const hasMounted = useHasMounted(); // custom hook kiểm tra đã mount chưa
+
+  useEffect(() => {
+    if (hasMounted) {
+      setComments(
+        Array.from({ length: 4 }, (_, index) => ({
+          id: index + 1,
+          avatar: faker.image.avatar(),
+          moment: (index + 1) * 10,
+          content: `This is a comment ${index + 1}`,
+          user: faker.person.fullName(),
+          createAt: "07/15/2025",
+        }))
+      );
+    }
+  }, [hasMounted]);
 
   const calLeft = (moment: number) => {
     const hardCodeDuration = 199;
@@ -286,7 +274,7 @@ const WaveTrack = () => {
               }}
             ></div>
             <div className="comments" style={{ position: "relative" }}>
-              {arrComments.map((comment) => {
+              {comments.map((comment) => {
                 return (
                   <Tooltip title={comment.content} arrow key={comment.id}>
                     <img
@@ -312,7 +300,7 @@ const WaveTrack = () => {
             </div>
           </div>
         </div>
-        {track.imgUrl ? (
+        {hasMounted && track.imgUrl ? (
           <div
             className="right"
             style={{
@@ -336,7 +324,12 @@ const WaveTrack = () => {
         )}
       </div>
       <div>
-        <CommentTrack comments={arrComments} track={track} />
+        <CommentTrack
+          comments={comments}
+          setComments={setComments}
+          track={track}
+          wavesurfer={wavesurfer!}
+        />
       </div>
     </div>
   );

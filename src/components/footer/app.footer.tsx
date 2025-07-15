@@ -75,8 +75,24 @@ const Footer = () => {
                   minWidth: 100,
                 }}
               >
-                <div style={{ color: "#f00" }}>{currentTrack?.title}</div>
-                <div style={{ color: "black" }}>
+                <div
+                  style={{
+                    color: "#f00",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {currentTrack?.title}
+                </div>
+                <div
+                  style={{
+                    color: "black",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
                   {currentTrack?.description}
                 </div>
               </div>
