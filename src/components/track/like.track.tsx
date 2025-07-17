@@ -1,7 +1,6 @@
 "use client";
 
-import { Favorite } from "@mui/icons-material";
-import { Chip } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

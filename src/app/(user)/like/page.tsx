@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "SC Like Page",
+  description: "This is des",
+};
+
 const LikePage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
