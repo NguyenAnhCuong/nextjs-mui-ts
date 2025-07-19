@@ -8,6 +8,8 @@ import { Box, Button, Divider } from "@mui/material";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import Link from "next/link";
 import { useTrackContext } from "@/lib/context/track.wrapper";
+import { convertSlugUrl } from "@/utils/api";
+import Image from "next/image";
 
 interface IProps {
   data: ITrackTop[];
@@ -66,6 +68,35 @@ const MainSlider = (props: IProps) => {
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 400,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+    ],
   };
 
   return (
@@ -92,15 +123,38 @@ const MainSlider = (props: IProps) => {
         {data.map((track) => {
           return (
             <div className="tracks" key={track._id}>
-              <img
+              {/* <img
                 src={
                   callApi
                     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`
                     : track.imgUrl
                 }
-              />
+              /> */}
+
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "150px",
+                  height: "150px",
+                }}
+              >
+                <Image
+                  alt="SC Image"
+                  src={
+                    callApi
+                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`
+                      : track.imgUrl
+                  }
+                  fill
+                  style={{
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
               <Link
-                href={`/track/${track._id}?audio=${track.trackName}`}
+                href={`/track/${convertSlugUrl(track.title)}-${
+                  track._id
+                }.html?audio=${track.trackName}`}
                 onClick={() => setCurrentTrack({ ...track, isPlaying: false })}
                 style={{ textDecoration: "none", color: "black" }}
               >

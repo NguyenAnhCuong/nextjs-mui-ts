@@ -11,6 +11,7 @@ import { useTrackContext } from "@/lib/context/track.wrapper";
 import CommentTrack from "@/components/track/comment.track";
 import { faker } from "@faker-js/faker";
 import LikeTrack from "@/components/track/like.track";
+import Image from "next/image";
 
 const WaveTrack = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -278,7 +279,8 @@ const WaveTrack = () => {
               {comments.map((comment) => {
                 return (
                   <Tooltip title={comment.content} arrow key={comment.id}>
-                    <img
+                    <Image
+                      alt="wave"
                       onPointerMove={(e) => {
                         hoverRef.current!.style.width = calLeft(
                           comment.moment + 3
@@ -311,7 +313,12 @@ const WaveTrack = () => {
               padding: 15,
             }}
           >
-            <img src={`/${track.imgUrl}`} alt="" width={250} height={250} />
+            <Image
+              src={`/${track.imgUrl}`}
+              alt="image song"
+              width={250}
+              height={250}
+            />
           </div>
         ) : (
           <div

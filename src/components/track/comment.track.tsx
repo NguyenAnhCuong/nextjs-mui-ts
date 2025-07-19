@@ -9,6 +9,7 @@ import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import WaveSurfer from "wavesurfer.js";
 import { useHasMounted } from "@/utils/customHook";
+import Image from "next/image";
 
 dayjs.extend(relativeTime);
 
@@ -88,7 +89,8 @@ const CommentTrack = (props: IComment) => {
               p: 3,
             }}
           >
-            <img
+            <Image
+              alt="Avatar"
               src={"/assets/images/defaultavata.png"}
               height={150}
               width={150}
@@ -117,7 +119,15 @@ const CommentTrack = (props: IComment) => {
                         marginBottom: "25px",
                       }}
                     >
-                      <img
+                      {/* <img
+                        src={comment.avatar}
+                        height={40}
+                        width={40}
+                        style={{ borderRadius: "50%" }}
+                      /> */}
+
+                      <Image
+                        alt="Comment-avatar"
                         src={comment.avatar}
                         height={40}
                         width={40}
