@@ -99,6 +99,18 @@ const MainSlider = (props: IProps) => {
     ],
   };
 
+  const resolveImageUrl = (imgUrl: string, callApi: boolean) => {
+    if (callApi) {
+      return `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${imgUrl}`;
+    }
+
+    // Nếu imgUrl bắt đầu bằng / thì giữ nguyên
+    if (imgUrl.startsWith("/")) return imgUrl;
+
+    // Nếu imgUrl bị lỗi //assets/... thì loại bớt dấu /
+    return "/" + imgUrl.replace(/^\/+/, "");
+  };
+
   return (
     <Box
       sx={{
@@ -140,11 +152,7 @@ const MainSlider = (props: IProps) => {
               >
                 <Image
                   alt="SC Image"
-                  src={
-                    callApi
-                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`
-                      : track.imgUrl
-                  }
+                  src={resolveImageUrl(track.imgUrl, callApi)}
                   fill
                   style={{
                     objectFit: "contain",

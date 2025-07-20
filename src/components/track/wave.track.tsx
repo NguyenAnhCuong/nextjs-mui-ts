@@ -279,7 +279,7 @@ const WaveTrack = () => {
               {comments.map((comment) => {
                 return (
                   <Tooltip title={comment.content} arrow key={comment.id}>
-                    <Image
+                    <img
                       alt="wave"
                       onPointerMove={(e) => {
                         hoverRef.current!.style.width = calLeft(

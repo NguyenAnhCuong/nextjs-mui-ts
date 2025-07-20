@@ -119,20 +119,20 @@ const CommentTrack = (props: IComment) => {
                         marginBottom: "25px",
                       }}
                     >
-                      {/* <img
-                        src={comment.avatar}
-                        height={40}
-                        width={40}
-                        style={{ borderRadius: "50%" }}
-                      /> */}
-
-                      <Image
-                        alt="Comment-avatar"
+                      <img
                         src={comment.avatar}
                         height={40}
                         width={40}
                         style={{ borderRadius: "50%" }}
                       />
+
+                      {/* <Image
+                        alt="Comment-avatar"
+                        src={comment.avatar}
+                        height={40}
+                        width={40}
+                        style={{ borderRadius: "50%" }}
+                      /> */}
                       <div>
                         <Typography fontSize={13}>
                           {comment.user} at{" "}
