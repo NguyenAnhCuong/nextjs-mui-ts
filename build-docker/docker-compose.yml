@@ -1,0 +1,20 @@
+#docker compose -p soundcloud up -d
+services:
+  nginx:
+    image: nginx:1.23
+    volumes: -./default.conf:/etc/nginx/conf.d/default.conf
+    ports: -3000:80
+
+  backend-soundcloud:
+    image: haryphan97/hoidanit-backend-soundcloud-public:1.0
+    environment:
+      PORT: 8001
+      MONGO_URL: mongodb+srv://nac16:Cuong123@nguyenanhcuong.sld9y.mongodb.net/?retryWrites=true&w=majority&appName=NguyenAnhCuong
+    ports:
+      - 8001:8001
+
+  frontend-nextjs:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
