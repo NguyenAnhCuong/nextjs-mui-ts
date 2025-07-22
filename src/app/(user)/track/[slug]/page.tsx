@@ -36,6 +36,10 @@ export async function generateMetadata(
   };
 }
 
+export async function generateStaticParams() {
+  return [{ slug: "song-1-1.html" }, { slug: "song-2-2.html" }];
+}
+
 const DetailTrackPage = async (props: any) => {
   const { params } = props;
 
@@ -60,6 +64,8 @@ const DetailTrackPage = async (props: any) => {
   //     sort:"-createAt"
   //   }
   // });
+
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return (
     <Container>
