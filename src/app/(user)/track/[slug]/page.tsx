@@ -4,6 +4,7 @@ import { Container } from "@mui/material";
 import slugify from "slugify";
 
 import type { Metadata, ResolvingMetadata } from "next";
+import next from "next";
 
 type Props = {
   params: { slug: string };
@@ -51,7 +52,10 @@ const DetailTrackPage = async (props: any) => {
   // const res = await sendRequest<IBackendRes<ITrackTop>>({
   //   url: `http://localhost:8000/api/v1/tracks/${id}`,
   //   method: "GET",
-  //   nextOption: { cache: "no-store" },
+  //   nextOption: {
+  //     // cache: "no-store",
+  //     next: { tags: ["track-by-id"] },
+  //   },
   // });
 
   // const res = await sendRequest<IBackendRes<ITrackTop>>({

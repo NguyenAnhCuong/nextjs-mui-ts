@@ -7,6 +7,7 @@ import { useState } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useHasMounted } from "@/utils/customHook";
+import { sendRequest } from "@/utils/api";
 
 const LikeTrack = (props: any) => {
   const { track } = props;
@@ -18,7 +19,18 @@ const LikeTrack = (props: any) => {
 
   const fetchData = async () => {};
 
-  const handleLikeTrack = () => {};
+  const handleLikeTrack = async () => {
+    // fetchData();
+    // await sendRequest<IBackendRes<any>>({
+    //   url: `/api/revalidate`,
+    //   method: "POST",
+    //   queryParams: {
+    //     tag: "track-by-id",
+    //     secret: process.env.REVALIDATE_SECRET,
+    //   },
+    // });
+    // router.refresh();
+  };
 
   return (
     <div

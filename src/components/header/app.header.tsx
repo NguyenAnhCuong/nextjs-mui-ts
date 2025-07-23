@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Avatar from "@mui/material/Avatar";
 import { useState, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
@@ -22,6 +21,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import { useRouter } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
+import ActiveLink from "./active.link";
+import Link from "next/link";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -201,6 +202,13 @@ export default function AppHeader() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onKeyDown={(e: any) => {
+                  if (e.key === "Enter") {
+                    if (e?.target.value) {
+                      router.push(`/search?q=${e?.target?.value}`);
+                    }
+                  }
+                }}
               />
             </Search>
             <Box sx={{ flexGrow: 1 }} />
@@ -214,19 +222,25 @@ export default function AppHeader() {
                 ">a": {
                   color: "unset",
                   textDecoration: "none",
+
+                  "&.active": {
+                    background: "#3b4a59",
+                    color: "#cefaff",
+                    borderRadius: "5px",
+                  },
                 },
               }}
             >
               {session ? (
                 <>
-                  <Link href={"/playlist"}>Playlist</Link>
-                  <Link href={"/like"}>Likes</Link>
-                  <Link href={"/track/upload"}>Upload</Link>
+                  <ActiveLink href={"/playlist"}>Playlist</ActiveLink>
+                  <ActiveLink href={"/like"}>Likes</ActiveLink>
+                  <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
                   <Avatar onClick={handleProfileMenuOpen}>E</Avatar>
                 </>
               ) : (
                 <>
-                  <Link href={"auth/signin"}>Login</Link>
+                  <ActiveLink href={"auth/signin"}>Login</ActiveLink>
                 </>
               )}
             </Box>
